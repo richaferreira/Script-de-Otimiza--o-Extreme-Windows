@@ -6,13 +6,13 @@ O **Extreme Optimizer v6.0** é a ferramenta definitiva para otimização do Win
 
 --- 
 
-## 🚀 Visão Geral
+##  Visão Geral
 
 Esta versão "Ultimate Edition" foi projetada para usuários que buscam maximizar o desempenho, a privacidade e a estabilidade de seus sistemas Windows. Com uma interface de usuário de terminal (TUI) moderna e navegação intuitiva por setas, o controle total do seu PC está agora ao seu alcance.
 
 --- 
 
-## ✨ Destaques da Versão 6.0
+##  Destaques da Versão 6.0
 
 ### Interface Interativa (TUI)
 
@@ -33,7 +33,7 @@ O Extreme Optimizer v6.0 consolida o conhecimento de especialistas e comunidades
 
 --- 
 
-## 🎯 Funcionalidades Essenciais
+##  Funcionalidades Essenciais
 
 - **Combo Ultimate:** Uma solução completa que executa uma sequência otimizada de todas as funcionalidades para um sistema totalmente ajustado.
 - **Gamer Mode:** Configurações dedicadas para reduzir o *input lag*, otimizar a rede e ativar o plano de energia de alto desempenho.
@@ -43,7 +43,7 @@ O Extreme Optimizer v6.0 consolida o conhecimento de especialistas e comunidades
 
 --- 
 
-## 🛡️ Como Usar
+##  Como Usar
 
 1.  **Download:** Baixe o arquivo `extreme_optimizer_v6_0_ultimate.ps1`.
 2.  **Execução:** Clique com o botão direito no arquivo `.ps1` e selecione **"Executar com o PowerShell"**. O script solicitará privilégios de Administrador automaticamente.
@@ -59,7 +59,7 @@ Sempre é recomendado criar um ponto de restauração do sistema antes de aplica
 
 --- 
 
-## 🤝 Contribuição
+##  Contribuição
 
 Sinta-se à vontade para abrir *issues* ou *pull requests* para melhorias e sugestões.
 
