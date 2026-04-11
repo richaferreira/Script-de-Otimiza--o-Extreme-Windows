@@ -111,7 +111,7 @@ Embora focado em jogos, muitos desses ajustes beneficiam a CPU e RAM de forma ge
 
 ### Fontes e Estratégias Integradas:
 
-| Fonte de Otimização | Foco Principal | Contribuições Chave na v7.0 |
+| Fonte de Otimização | Foco Principal | Contribuições Chave na v8.0 |
 | :------------------ | :------------- | :-------------------------- |
 | **Extreme Optimizer v6.0 (Base)** | Estabilidade e Usabilidade | Interface interativa (TUI), sistema de segurança (backup/restore), otimizações de boot/shutdown, e debloat geral de aplicativos. |
 | **FoxOS** | Performance Extrema e Privacidade | Implementação de `Win32PrioritySeparation` para priorização de CPU, desativação de `LogPages` para redução de overhead de kernel, e ajustes agressivos de telemetria e auditoria. |
@@ -179,7 +179,7 @@ Acesso rápido a utilitários externos, como o Chris Titus WinUtil (para ajustes
 
 ---
 
-## 🛡️ Como Utilizar o Extreme Optimizer v7.0
+## 🛡️ Como Utilizar o Extreme Optimizer v8.0
 
 1.  **Baixe o script**: Faça o download do arquivo `extreme_optimizer_v8_0_gui_final.ps1`.
 2.  **Execute como Administrador**: Clique com o botão direito no arquivo `.ps1` e selecione "Executar com PowerShell". O script solicitará elevação de privilégios se necessário.
