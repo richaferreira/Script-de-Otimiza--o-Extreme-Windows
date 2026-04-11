@@ -5,7 +5,7 @@ Esta é a versão com Interface Gráfica (GUI) do Extreme Optimizer, combinando 
 
 ---
 
-## 🚀 Visão Geral e Filosofia de Otimização Híbrida
+## 🚀 Visão Geral
 
 A v8.0 é a culminação de uma análise aprofundada de diversas metodologias de otimização, resultando em um ambiente Windows que se destaca tanto na execução de softwares de desenvolvimento de alta demanda (como Visual Studio Code, Docker, MongoDB, Python, Java e Node.js) quanto na entrega de uma experiência de jogo fluida, com baixa latência e alta taxa de quadros.
 
