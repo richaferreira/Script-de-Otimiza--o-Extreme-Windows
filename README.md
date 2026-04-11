@@ -1,12 +1,16 @@
-# Relatório Detalhado: Otimização de RAM e CPU no Extreme Optimizer v7.0
 
-O **Extreme Optimizer v7.0 (Developer & Gaming Hybrid Edition)** foi projetado com foco na liberação e otimização de recursos de RAM e CPU, visando proporcionar um ambiente de alta performance tanto para desenvolvedores quanto para gamers. O script atua em diversas frentes, desativando processos e serviços desnecessários, ajustando prioridades e eliminando telemetria.
+# Extreme Optimizer v8.0 - GUI Hybrid Edition
+
+Esta é a versão com Interface Gráfica (GUI) do Extreme Optimizer, combinando as otimizações das versões v7.0 (Developer & Gaming Hybrid) e v4.6 (Auto-Stylist) em uma experiência visual intuitiva.
 
 ---
 
 ## 🚀 Visão Geral e Filosofia de Otimização Híbrida
 
-A v7.0 é a culminação de uma análise aprofundada de diversas metodologias de otimização, resultando em um ambiente Windows que se destaca tanto na execução de softwares de desenvolvimento de alta demanda (como Visual Studio Code, Docker, MongoDB, Python, Java e Node.js) quanto na entrega de uma experiência de jogo fluida, com baixa latência e alta taxa de quadros.
+A v8.0 é a culminação de uma análise aprofundada de diversas metodologias de otimização, resultando em um ambiente Windows que se destaca tanto na execução de softwares de desenvolvimento de alta demanda (como Visual Studio Code, Docker, MongoDB, Python, Java e Node.js) quanto na entrega de uma experiência de jogo fluida, com baixa latência e alta taxa de quadros.
+
+
+
 ---
 
 ## 📊 Estratégias de Otimização de RAM e CPU
@@ -118,7 +122,7 @@ Embora focado em jogos, muitos desses ajustes beneficiam a CPU e RAM de forma ge
 
 ## ✨ Interface de Usuário (TUI) e Experiência Aprimorada
 
-A interface do Extreme Optimizer v7.0 mantém o padrão inovador estabelecido nas versões anteriores, garantindo uma interação intuitiva e um feedback visual claro:
+A interface do Extreme Optimizer v8.0 mantém o padrão inovador estabelecido nas versões anteriores, garantindo uma interação intuitiva e um feedback visual claro:
 
 -   **Navegação Interativa por Setas:** A interação com o script é totalmente baseada nas teclas de seta (↑/↓) para navegação e `Enter` para confirmação. Isso elimina a necessidade de digitação manual, reduzindo erros e agilizando o processo de seleção.
 -   **Design "Neon & Glass":** Uma estética moderna e vibrante, utilizando cores de alto contraste (Ciano e Magenta) e bordas em ASCII estendidas. Este design transforma o terminal em uma ferramenta visualmente atraente e profissional, alinhada com as tendências de UI modernas.
@@ -128,10 +132,16 @@ A interface do Extreme Optimizer v7.0 mantém o padrão inovador estabelecido na
 
 ## 🎯 Funcionalidades Essenciais e Modos de Otimização
 
-### 1. Combo Híbrido (Developer & Gaming)
-
 Esta é a opção mais abrangente, executando uma sequência otimizada de todas as funcionalidades para configurar o sistema para ambos os perfis de uso com um único clique. Inclui:
+
 -   **Segurança:** Criação automática de ponto de restauração e backup do registro do sistema.
+-   **Modos Dedicados**: Otimizações específicas para `Gamer Mode` e `Developer Mode`.
+-   **Limpeza e Debloat**: Remove aplicativos indesejados e desativa telemetria.
+-   **Boot e Shutdown**: Acelera a inicialização e o desligamento do sistema.
+-   **Auto-Stylist (Windhawk)**: Instala o Windhawk e aplica temas de barra de tarefas (Win10, Transparente, Arredondada) automaticamente.
+-   **Alinhamento da Barra de Tarefas**: Altera o alinhamento da barra de tarefas (Esquerda/Centro).
+-   **Pós-Formatação**: Instala programas essenciais via Winget, configura DNS, aplica tweaks de hardware e melhorias de UI.
+-   **Ferramentas**: Acesso rápido ao Chris Titus Windows Utility.
 -   **Aceleração de Boot:** Desativação de atrasos de inicialização e ativação de boot rápido.
 -   **Performance Gamer:** Otimização de latência TCP, rede e timer do sistema.
 -   **Developer Tweaks:** Priorização de processos de desenvolvimento e otimização de I/O.
@@ -171,12 +181,10 @@ Acesso rápido a utilitários externos, como o Chris Titus WinUtil (para ajustes
 
 ## 🛡️ Como Utilizar o Extreme Optimizer v7.0
 
-1.  **Download:** Obtenha o arquivo `extreme_optimizer_v7_0_hybrid.ps1`.
-2.  **Execução:** Clique com o botão direito no arquivo `.ps1` e selecione **"Executar com o PowerShell"**. O script solicitará automaticamente privilégios de Administrador, que são essenciais para aplicar as otimizações.
-3.  **Navegação:** Uma vez iniciado, utilize as teclas **Seta para Cima (↑)** e **Seta para Baixo (↓)** para navegar entre as opções do menu interativo.
-4.  **Seleção:** Pressione a tecla **Enter** para confirmar sua escolha e iniciar a otimização desejada.
-5.  **Acompanhamento:** Observe os **Status Cards** que aparecerão no terminal, indicando o progresso de cada otimização em tempo real.
-
+1.  **Baixe o script**: Faça o download do arquivo `extreme_optimizer_v8_0_gui_final.ps1`.
+2.  **Execute como Administrador**: Clique com o botão direito no arquivo `.ps1` e selecione "Executar com PowerShell". O script solicitará elevação de privilégios se necessário.
+3.  **Navegue pela GUI**: Utilize os botões na interface para aplicar as otimizações desejadas.
+4.  **Monitore o Log**: A caixa de texto à direita exibirá o progresso e o status de cada operação.
 --- 
 
 ## ⚠️ Aviso de Segurança e Recomendações

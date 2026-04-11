@@ -4,7 +4,7 @@ Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 # =========================================================
-# FUNÇÕES DO EXTREME OPTIMIZER v7.0 & v4.6 (INTEGRAÇÃO)
+# FUNÇÕES DO EXTREME OPTIMIZER v8_0
 # =========================================================
 
 function Show-Status-GUI {
