@@ -4,6 +4,11 @@ O **Extreme Optimizer v7.0 (Developer & Gaming Hybrid Edition)** foi projetado c
 
 ---
 
+## 🚀 Visão Geral e Filosofia de Otimização Híbrida
+
+A v7.0 é a culminação de uma análise aprofundada de diversas metodologias de otimização, resultando em um ambiente Windows que se destaca tanto na execução de softwares de desenvolvimento de alta demanda (como Visual Studio Code, Docker, MongoDB, Python, Java e Node.js) quanto na entrega de uma experiência de jogo fluida, com baixa latência e alta taxa de quadros.
+---
+
 ## 📊 Estratégias de Otimização de RAM e CPU
 
 O script emprega uma combinação de técnicas para garantir que o sistema operacional utilize seus recursos de forma mais eficiente:
@@ -99,15 +104,6 @@ Embora focado em jogos, muitos desses ajustes beneficiam a CPU e RAM de forma ge
 
 ---
 
-# Documentação Técnica: Extreme Optimizer v7.0 (Developer & Gaming Hybrid Edition)
-
-O **Extreme Optimizer v7.0** representa o ápice da otimização de sistemas Windows, projetado meticulosamente para atender às exigências de **desenvolvedores e gamers**. Esta edição híbrida integra as mais eficazes estratégias de performance, privacidade e estabilidade, oriundas de fontes renomadas e aprimoradas para uma experiência de usuário sem precedentes.
-
----
-
-## 🚀 Visão Geral e Filosofia de Otimização Híbrida
-
-A v7.0 é a culminação de uma análise aprofundada de diversas metodologias de otimização, resultando em um ambiente Windows que se destaca tanto na execução de softwares de desenvolvimento de alta demanda (como Visual Studio Code, Docker, MongoDB, Python, Java e Node.js) quanto na entrega de uma experiência de jogo fluida, com baixa latência e alta taxa de quadros.
 
 ### Fontes e Estratégias Integradas:
 
