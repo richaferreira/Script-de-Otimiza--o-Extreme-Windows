@@ -1,21 +1,42 @@
 $ErrorActionPreference = 'Stop'
 
+# =========================================================
+# SOLICITAÇÃO DE PRIVILÉGIOS DE ADMINISTRADOR
+# =========================================================
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Warning "Solicitando privilégios de Administrador..."
+    Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$PSCommandPath`"" -Verb RunAs
+    exit
+}
+
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 # =========================================================
-# FUNÇÕES DO EXTREME OPTIMIZER v8_0
+# FUNÇÕES DO EXTREME OPTIMIZER v8.0
 # =========================================================
 
 function Show-Status-GUI {
     param([string]$Module, [string]$Msg, [string]$Color = "Cyan")
     $timestamp = Get-Date -Format "HH:mm:ss"
-    $output = "[$timestamp] [$($Module.ToUpper().PadRight(10))] $Msg"
-    $script:OutputTextBox.AppendText("$output`n")
+    $output = "[$timestamp] [$($Module.ToUpper().PadRight(10))] $Msg`n"
+    
+    # Adicionando texto com cor no RichTextBox
+    $script:OutputTextBox.SelectionStart = $script:OutputTextBox.TextLength
+    $script:OutputTextBox.SelectionLength = 0
+    
+    # Conversão segura de cor (Se der erro, usa Branco)
+    try { $script:OutputTextBox.SelectionColor = [System.Drawing.ColorFromName]($Color) } 
+    catch { $script:OutputTextBox.SelectionColor = [System.Drawing.Color]::White }
+    
+    $script:OutputTextBox.AppendText($output)
+    $script:OutputTextBox.SelectionColor = $script:OutputTextBox.ForeColor # Reseta a cor
     $script:OutputTextBox.ScrollToCaret()
+
+    # Mantém a UI responsiva sem congelar
+    [System.Windows.Forms.Application]::DoEvents()
 }
 
-# Funções Reais (Adaptadas para GUI)
 function Create-RestorePoint-GUI {
     Show-Status-GUI "SEGURANÇA" "Criando Ponto de Restauração do Sistema..." "Yellow"
     Enable-ComputerRestore -Drive "C:\" -ErrorAction SilentlyContinue
@@ -33,8 +54,8 @@ function Run-Security-GUI {
 
 function Run-GamerMode-GUI {
     Show-Status-GUI "GAMER" "Aplicando Otimizações Gamer..." "Magenta"
-    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" NetworkThrottlingIndex 0xFFFFFFFF
-    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" SystemResponsiveness 0
+    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" NetworkThrottlingIndex 0xFFFFFFFF -ErrorAction SilentlyContinue
+    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" SystemResponsiveness 0 -ErrorAction SilentlyContinue
     New-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" TCPNoDelay -Value 1 -PropertyType DWORD -Force | Out-Null
     powercfg -setactive SCHEME_MIN
     reg add "HKLM:\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "24" /f >$null
@@ -58,21 +79,12 @@ function Run-DeveloperMode-GUI {
     Show-Status-GUI "DEV" "Ambiente de desenvolvimento otimizado!" "Green"
 }
 
-function Run-Tools-GUI {
-    param($tool)
-    if ($tool -eq "WinUtil") {
-        Show-Status-GUI "TOOLS" "Abrindo Chris Titus Utility..." "Cyan"
-        irm https://christitus.com/win | iex
-        Show-Status-GUI "TOOLS" "Chris Titus Utility executado!" "Green"
-    }
-}
-
 function Install-WingetPrograms-GUI {
     Show-Status-GUI "PROGRAMAS" "Instalando programas essenciais via Winget..." "Cyan"
     $programs = @("Google.Chrome", "Mozilla.Firefox", "Discord.Discord", "Telegram.TelegramDesktop", "WhatsApp.WhatsApp", "Microsoft.VisualStudioCode", "Git.Git", "7zip.7zip", "VideoLAN.VLC")
     foreach ($program in $programs) {
         Show-Status-GUI "PROGRAMAS" "  -> Instalando $program..." "Yellow"
-        winget install --id $program --source winget --accept-package-agreements --accept-source-agreements -e -h -ErrorAction SilentlyContinue
+        winget install --id $program --source winget --accept-package-agreements --accept-source-agreements -e -h --silent -ErrorAction SilentlyContinue
     }
     Show-Status-GUI "PROGRAMAS" "Instalação de programas concluída!" "Green"
 }
@@ -90,7 +102,7 @@ function Apply-Hardware-Tweaks-GUI {
     Show-Status-GUI "HARDWARE" "Aplicando tweaks de hardware (NVIDIA/AMD)..." "Cyan"
     Get-Service -Name "NvTelemetryContainer" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled
     $ULPSKey = "HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000"
-    if (Test-Path $ULPSKey) { Set-ItemProperty -Path $ULPSKey -Name "EnableUlps" -Value 0 }
+    if (Test-Path $ULPSKey) { Set-ItemProperty -Path $ULPSKey -Name "EnableUlps" -Value 0 -ErrorAction SilentlyContinue }
     Show-Status-GUI "HARDWARE" "Tweaks de hardware aplicados!" "Green"
 }
 
@@ -107,7 +119,7 @@ function Restore-Tweaks-GUI {
     $BackupDir = "$env:ProgramData\ExtremeOptimizer\backups"
     if (Test-Path "$BackupDir\Tcpip.reg") { 
         reg import "$BackupDir\Tcpip.reg" 
-        Show-Status-GUI "RESTORE" "  -> Registro de Rede Restaurado."
+        Show-Status-GUI "RESTORE" "  -> Registro de Rede Restaurado." "Green"
     }
     
     powercfg -setactive SCHEME_BALANCED
@@ -117,14 +129,19 @@ function Restore-Tweaks-GUI {
 function Run-Debloat-GUI {
     Show-Status-GUI "LIMPEZA" "Removendo Apps Inúteis e Telemetria..." "Yellow"
     $apps = "*SkypeApp*", "*BingNews*", "*ZuneMusic*", "*YourPhone*", "*MicrosoftOfficeHub*", "*GetHelp*", "*Solitaire*", "*Microsoft.Windows.Photos*", "*Microsoft.ZuneVideo*"
-    foreach ($app in $apps) { Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue }
-    Stop-Service DiagTrack -ErrorAction SilentlyContinue; Set-Service DiagTrack -StartupType Disabled
+    foreach ($app in $apps) { Get-AppxPackage -Name $app -AllUsers -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue }
+    
+    Stop-Service DiagTrack -ErrorAction SilentlyContinue
+    Set-Service DiagTrack -StartupType Disabled -ErrorAction SilentlyContinue
+    
     reg add "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettings" /t REG_DWORD /d "1" /f >$null
     reg add "HKLM:\Software\Policies\Microsoft\Edge" /v "DiagnosticData" /t REG_DWORD /d "0" /f >$null
     reg add "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Windows\Win32kWPP\Parameters" /v "LogPages" /t REG_DWORD /d "0" /f >$null
     reg add "HKLM:\SYSTEM\CurrentControlSet\Services\kbdhid\Parameters" /v "LogPages" /t REG_DWORD /d "0" /f >$null
+    
     Set-Service -Name "WaaSMedicSvc" -StartupType Disabled -ErrorAction SilentlyContinue
     Stop-Service -Name "WaaSMedicSvc" -ErrorAction SilentlyContinue
+    
     Remove-Item "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
     Show-Status-GUI "LIMPEZA" "Sistema limpo e privado!" "Green"
 }
@@ -132,16 +149,17 @@ function Run-Debloat-GUI {
 function Run-Tools-GUI {
     param($tool)
     if ($tool -eq "WinUtil") {
-        Show-Status-GUI "TOOLS" "Abrindo Chris Titus Utility..." "Cyan"
-        irm https://christitus.com/win | iex
-        Show-Status-GUI "TOOLS" "Chris Titus Utility executado!" "Green"
+        Show-Status-GUI "TOOLS" "Abrindo Chris Titus Utility em nova janela..." "Cyan"
+        # Abre em um processo separado para evitar o congelamento da GUI principal (conflito de Thread WinForms vs WPF)
+        Start-Process powershell -ArgumentList "-NoProfile -Command `"irm https://christitus.com/win | iex`""
+        Show-Status-GUI "TOOLS" "Chris Titus Utility iniciado!" "Green"
     }
 }
 
 function Set-Taskbar-Alignment-GUI {
     param([int]$Alignment)
     Show-Status-GUI "UI" "Alterando alinhamento da barra de tarefas..." "Cyan"
-    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarAl" -Value $Alignment
+    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarAl" -Value $Alignment -ErrorAction SilentlyContinue
     Stop-Process -Name explorer -Force
     Show-Status-GUI "UI" "Alinhamento da barra de tarefas alterado!" "Green"
 }
@@ -185,12 +203,12 @@ function Install-Windhawk-With-Theme-GUI {
     }
 
     $RegistryPath = "HKLM:\SOFTWARE\Windhawk\Engine\Mods\$ModID"
-    if (!(Test-Path $RegistryPath)) { New-Item -Path $RegistryPath -Force | Out-Null }
+    if (!(Test-Path $RegistryPath)) { New-Item -Path $RegistryPath -Force -ErrorAction SilentlyContinue | Out-Null }
 
-    Set-ItemProperty -Path $RegistryPath -Name "Enabled" -Value 1 -PropertyType DWORD -Force
+    Set-ItemProperty -Path $RegistryPath -Name "Enabled" -Value 1 -PropertyType DWORD -Force -ErrorAction SilentlyContinue
     
     $SettingsPath = "$RegistryPath\Settings"
-    if (!(Test-Path $SettingsPath)) { New-Item -Path $SettingsPath -Force | Out-Null }
+    if (!(Test-Path $SettingsPath)) { New-Item -Path $SettingsPath -Force -ErrorAction SilentlyContinue | Out-Null }
 
     switch ($ThemeName) {
         "WIN10" {
@@ -205,7 +223,7 @@ function Install-Windhawk-With-Theme-GUI {
         }
     }
 
-    Set-ItemProperty -Path $RegistryPath -Name "SettingsChangeTime" -Value (Get-Date).Ticks -PropertyType QWORD -Force
+    Set-ItemProperty -Path $RegistryPath -Name "SettingsChangeTime" -Value (Get-Date).Ticks -PropertyType QWORD -Force -ErrorAction SilentlyContinue
 
     Show-Status-GUI "STYLIST" "[+] Windhawk configurado com o tema $ThemeName!" "Green"
     Show-Status-GUI "STYLIST" "[!] IMPORTANTE: O Windhawk baixará o código do mod ao ser aberto pela primeira vez." "Yellow"
@@ -240,13 +258,11 @@ $SubtitleLabel.AutoSize = $true
 $SubtitleLabel.Location = New-Object System.Drawing.Point(12, 50)
 $Form.Controls.Add($SubtitleLabel)
 
-# Caixa de Logs
-$script:OutputTextBox = New-Object System.Windows.Forms.TextBox
+# Caixa de Logs (Alterado de TextBox para RichTextBox para suportar cores)
+$script:OutputTextBox = New-Object System.Windows.Forms.RichTextBox
 $script:OutputTextBox.Location = New-Object System.Drawing.Point(250, 90)
 $script:OutputTextBox.Size = New-Object System.Drawing.Size(540, 490)
-$script:OutputTextBox.MultiLine = $true
 $script:OutputTextBox.ReadOnly = $true
-$script:OutputTextBox.ScrollBars = "Vertical"
 $script:OutputTextBox.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#2D2D30")
 $script:OutputTextBox.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#E0E0E0")
 $script:OutputTextBox.Font = New-Object System.Drawing.Font("Consolas", 9)
@@ -256,6 +272,7 @@ $Form.Controls.Add($script:OutputTextBox)
 $ButtonPanel = New-Object System.Windows.Forms.Panel
 $ButtonPanel.Location = New-Object System.Drawing.Point(10, 90)
 $ButtonPanel.Size = New-Object System.Drawing.Size(230, 490)
+$ButtonPanel.AutoScroll = $true # CORREÇÃO: Adicionado scroll para exibir todos os botões
 $Form.Controls.Add($ButtonPanel)
 
 # =========================================================
@@ -264,21 +281,18 @@ $Form.Controls.Add($ButtonPanel)
 $currentY = 0
 
 function Create-Modern-Button {
-    param([string]$Text, [scriptblock]$Action, [string]$Icon = "")
+    param([string]$Text, [scriptblock]$Action)
     $Button = New-Object System.Windows.Forms.Button
     $Button.Text = "  $Text"
     $Button.TextAlign = "MiddleLeft"
     $Button.Location = New-Object System.Drawing.Point(0, $script:currentY)
-    $Button.Size = New-Object System.Drawing.Size(230, 40)
+    $Button.Size = New-Object System.Drawing.Size(210, 40) # Leve recuo no Size para não cortar no scroll
     $Button.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#333333")
     $Button.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFFFFF")
     $Button.FlatStyle = "Flat"
     $Button.FlatAppearance.BorderSize = 0
-    $Button.Font = New-Object System.Drawing.Font("Segoe UI Semibold", 10)
+    $Button.Font = New-Object System.Drawing.Font("Segoe UI Semibold", 9)
     $Button.add_Click($Action)
-    # Adicionar Ícone (requer arquivos de imagem)
-    # $Button.Image = [System.Drawing.Image]::FromFile("icons\$Icon.png")
-    # $Button.ImageAlign = "MiddleLeft"
     $ButtonPanel.Controls.Add($Button)
     $script:currentY += 45
 }
@@ -326,7 +340,7 @@ Create-Modern-Button "🛠️ CHRIS TITUS WINUTIL" { Run-Tools-GUI "WinUtil" }
 
 $script:currentY += 10 # Separador
 
-Create-Modern-Button "🛡️ CRIAR PONTO DE RESTAURAÇÃO" { Create-RestorePoint-GUI }
+Create-Modern-Button "🛡️ CRIAR PONTO RESTAURAÇÃO" { Create-RestorePoint-GUI }
 Create-Modern-Button "🛡️ BACKUP REGISTRO" { Run-Security-GUI }
 Create-Modern-Button "↩️ RESTAURAR TWEAKS" { Restore-Tweaks-GUI }
 
