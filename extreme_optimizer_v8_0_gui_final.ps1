@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'SilentlyContinue'
 
 # =========================================================
 # SOLICITAÇÃO DE PRIVILÉGIOS DE ADMINISTRADOR
@@ -168,9 +168,12 @@ function Run-SpeedBoot-GUI {
     Show-Status-GUI "BOOT" "Acelerando Inicialização e Desligamento..." "Cyan"
     $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Serialize"
     if (!(Test-Path $path)) { New-Item $path -Force | Out-Null }
-    Set-ItemProperty $path StartupDelayInMSec -Value 0 -PropertyType DWORD
-    Set-ItemProperty "HKCU:\Control Panel\Desktop" AutoEndTasks -Value 1
-    Set-ItemProperty "HKCU:\Control Panel\Desktop" WaitToKillAppTimeout -Value 2000
+    
+    # Usando New-ItemProperty -Force em vez de Set-ItemProperty para evitar falhas se a chave não existir
+    New-ItemProperty -Path $path -Name "StartupDelayInMSec" -Value 0 -PropertyType DWORD -Force | Out-Null
+    New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "AutoEndTasks" -Value "1" -PropertyType String -Force | Out-Null
+    New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "WaitToKillAppTimeout" -Value "2000" -PropertyType String -Force | Out-Null
+    
     Show-Status-GUI "BOOT" "Boot e Shutdown acelerados!" "Green"
 }
 
@@ -299,14 +302,20 @@ function Create-Modern-Button {
 
 # Botões
 Create-Modern-Button "🚀 COMBO HÍBRIDO" { 
-    Show-Status-GUI "GUI" "Iniciando COMBO HÍBRIDO..." "Yellow"
-    Create-RestorePoint-GUI
-    Run-Security-GUI
-    Run-SpeedBoot-GUI
-    Run-GamerMode-GUI
-    Run-DeveloperMode-GUI
-    Run-Debloat-GUI
-    Show-Status-GUI "GUI" "COMBO HÍBRIDO CONCLUÍDO!" "Green"
+    try {
+        Show-Status-GUI "GUI" "Iniciando COMBO HÍBRIDO (Pode demorar alguns minutos)..." "Yellow"
+        
+        Create-RestorePoint-GUI
+        Run-Security-GUI
+        Run-SpeedBoot-GUI
+        Run-GamerMode-GUI
+        Run-DeveloperMode-GUI
+        Run-Debloat-GUI
+        
+        Show-Status-GUI "GUI" "COMBO HÍBRIDO CONCLUÍDO!" "Green"
+    } catch {
+        Show-Status-GUI "ERRO" "Falha durante o Combo: $_" "Red"
+    }
 }
 
 Create-Modern-Button "🎮 GAMER MODE" { Run-GamerMode-GUI }
